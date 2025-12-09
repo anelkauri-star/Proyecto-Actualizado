@@ -7,7 +7,7 @@ let pool;
 const dbConfig = {
     host: 'localhost',         //servidor MySQL
     user: 'root',  
-    password: 'Pkpablo28', 
+    password: '1234', 
     database: 'congreso_mercadotecnias', 
     waitForConnections: true,
     connectionLimit: 10,       // Límite de conexiones simultáneas
