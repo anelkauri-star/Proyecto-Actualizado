@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Congreso de Ciencias Exactas XIX</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <header>
+        <div class="logo-left">
+            <a href="index.html">Inicio</a>
+            <a href="redes sociales.html">Redes Sociales</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="Eventos.html">Eventos</a></li>
+                <li><a href="Mapa.html">Mapa</a></li>
+                <li><a href="Inicio de sesion.html">Iniciar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <img src="https://www.uaa.mx/portal/wp-content/uploads/2022/08/gallo-emblema-deportivo.png" alt="Logo UAA" class="hero-logo">
+        <h1>CONGRESO DE MERCADOTECNIA</h1>
+        <h2>Innovación y Estrategia</h2>
+        
+        <div class="hero-buttons">
+            <a href="#" class="register-button" onclick="mostrarRegistro()">Regístrate Ahora</a>
+            <a href="Inicio de sesion.html" class="login-button">Inicia Sesión</a>
+        </div>
+    </section>
+
+    <div id="registroModal">
+        <div id="registroModal-header">
+            <h2>Registrarse</h2>
+            <button onclick="document.getElementById('registroModal').style.display='none'">&times;</button>
+        </div>
+        
+        <form id="registroForm"> 
+            
+            <div class="full-width">
+                <label>Tipo de Registro</label>
+                <select id="tipoRegistro" onchange="cambiarTipoRegistro()">
+                    <option value="alumno">Alumno</option>
+                    <option value="profesor">Profesor</option>
+                    <option value="invitado">Externo/Invitado</option>
+                    <option value="administrador">Administrador</option>
+                </select>
+            </div>
+
+            <div><label>Nombre(s)</label><input type="text" id="nombre" required></div>
+            <div><label>Apellido Paterno</label><input type="text" id="apellidoPaterno" required></div>
+            <div class="full-width"><label>Apellido Materno</label><input type="text" id="apellidoMaterno" required></div>
+            
+            <div id="camposAlumno" class="full-width" style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div>
+                    <label>Carrera</label>
+                    <select id="carrera">
+                        <option value="">Seleccionar</option>
+                        <option value="Mercadotecnia">Mercadotecnia</option>
+                        <option value="Administracion">Administración</option>
+                        <option value="Comercio">Comercio</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Semestre</label>
+                    <select id="semestre">
+                        <option value="">Seleccionar</option>
+                        <option value="1">1er</option>
+                        <option value="2">2do</option>
+                        <option value="3">3er</option>
+                        <option value="4">4to</option>
+                        <option value="5">5to</option>
+                        <option value="6">6to</option>
+                        <option value="7">7mo</option>
+                        <option value="8">8vo</option>
+                    </select>
+                </div>
+                <div class="full-width">
+                    <label>ID Institucional</label>
+                    <input type="text" id="idInstitucional">
+                </div>
+            </div>
+
+            <div class="full-width">
+                <label>Correo Electrónico</label>
+                <input type="email" id="correo" required>
+            </div>
+
+            <div><label>Contraseña</label><input type="password" id="contrasena" required></div>
+            <div><label>Confirmar Contraseña</label><input type="password" id="confirmarContrasena" required></div>
+            
+            <button type="submit">Registrarse</button>
+        </form>
+    </div>
+
+    <script src="js/registro.js"></script>
+</body>
+</html>

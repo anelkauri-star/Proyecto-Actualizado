@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar Constancia PDF</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body>
+
+    <header class="header-white">
+        <div class="logo-left">
+            <a href="Menu alumno.html">Inicio</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="menu_admin.html" style="font-weight: 700;">Volver al Menú</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="content-container constancia-card">
+            <h2>Generar Constancia</h2>
+            <p style="color: #666; margin-bottom: 20px;">Ingresa la matrícula del alumno para descargar su documento.</p>
+            
+            <input type="text" id="idInstitucional" class="input-constancia" placeholder="Ej: UP200198">
+            
+            <button id="btnGenerar" class="submit-button" style="width: 100%; font-size: 1.2em;">Generar Constancia</button>
+            
+            <div id="mensaje"></div>
+        </div>
+    </main>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
+    <script>
+        // INICIALIZAR SOCKET.IO
+        const socket = io("http://localhost:3000");
+
+        // ESCUCHAR EVENTOS
+        socket.on("notificacion_constancia", (data) => {
+            console.log("Evento recibido:", data);
+            
+            const mensajeDiv = document.getElementById('mensaje');
+            mensajeDiv.style.color = "#28a745"; 
+            mensajeDiv.innerHTML = `🔔 ${data.mensaje}`;
+            
+            alert(`🔔 Notificación: ${data.mensaje}`);
+        });
+
+        // LÓGICA DEL BOTÓN
+        document.getElementById('btnGenerar').addEventListener('click', async () => {
+            const id = document.getElementById('idInstitucional').value;
+            const mensaje = document.getElementById('mensaje');
+
+            mensaje.innerHTML = "Generando documento...";
+            mensaje.style.color = "#333";
+
+            if (!id) {
+                mensaje.style.color = "#dc3545";
+                mensaje.innerHTML = "⚠️ Ingresa un ID institucional.";
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/constancias/${id}`);
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || "Error al generar");
+                }
+
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `Constancia_${id}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+
+                mensaje.style.color = "#ff4081"; 
+                mensaje.innerHTML = "✔️ ¡Constancia descargada con éxito!";
+
+            } catch (error) {
+                mensaje.style.color = "#dc3545";
+                mensaje.innerHTML = `❌ ${error.message}`;
+            }
+        });
+    </script>
+</body>
+</html>

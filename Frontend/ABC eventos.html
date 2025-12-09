@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar Programa de Eventos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    
+    <header class="header-white">
+        <div class="logo-left">
+            <a href="menu_admin.html">Inicio</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="Programa Completo.html" style="font-weight: 900; text-decoration: underline;">Programa</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="content-container"> <h1 class="page-title">Administrar Programa de Eventos</h1>
+
+            <section class="add-event-section">
+                <h2>Agregar Nuevo Evento</h2>
+                <form id="addEventForm" class="add-event-form">
+                    <div class="form-group"><label>Fecha:</label><input type="date" name="eventDate" required></div>
+                    <div class="form-group"><label>Hora Inicio:</label><input type="time" name="eventStartTime" required></div>
+                    <div class="form-group"><label>Hora Fin:</label><input type="time" name="eventEndTime" required></div>
+                    <div class="form-group"><label>Lugar:</label><input type="text" name="eventPlace" required></div>
+                    <div class="form-group"><label>Tipo:</label>
+                        <select name="eventType" required>
+                            <option value="Conferencia">Conferencia</option>
+                            <option value="Taller">Taller</option>
+                            <option value="Registro">Registro</option>
+                            <option value="Break">Break</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Responsable:</label><input type="text" name="eventSpeaker" required></div>
+                    <div class="form-group" style="grid-column: 1 / -1;"><label>Actividad:</label><textarea name="eventActivity" required></textarea></div>
+                    <div class="form-actions"><button type="submit" class="add-event-btn">Agregar Evento</button></div>
+                </form>
+            </section>
+
+            <section class="add-event-section" style="border-top: 2px dashed #ff4081; padding-top: 30px;">
+                <h2>Asignar Alumno a Evento</h2>
+                <form id="assignEventForm" class="add-event-form">
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Seleccione el Evento:</label>
+                        <select id="assignEventSelect" name="eventoId" required>
+                            <option value="">Cargando eventos...</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Matrícula / ID del Alumno:</label>
+                        <input type="text" id="assignStudentId" name="idInstitucional" placeholder="Ej: UP200198" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="add-event-btn" style="background-color: #333;">Registrar Asistencia</button>
+                    </div>
+                </form>
+            </section>
+
+            <h1 class="page-title" style="font-size: 2em; margin-top: 40px;">Eventos Actuales</h1>
+            <div id="eventListContainer">Cargando...</div>
+            
+            <a href="menu_admin.html" style="display:block; text-align:center; margin-top:20px; color:#ff4081; font-weight:bold; text-decoration: none;">Volver al Menú</a>
+        </div>
+    </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const addEventForm = document.getElementById('addEventForm');
+        const assignEventForm = document.getElementById('assignEventForm');
+        const assignSelect = document.getElementById('assignEventSelect');
+        const eventListContainer = document.getElementById('eventListContainer');
+
+        // --- 1. CARGAR EVENTOS (LISTA Y SELECT) ---
+        async function loadEvents() {
+            try {
+                const response = await fetch('http://localhost:3000/api/eventos');
+                const result = await response.json();
+
+                if (result.success) {
+                    const events = result.events;
+                    
+                    // A) Llenar Lista Visual
+                    eventListContainer.innerHTML = '';
+                    // B) Llenar Select de Asignación
+                    assignSelect.innerHTML = '<option value="">-- Seleccione un Evento --</option>';
+
+                    if (events.length === 0) {
+                        eventListContainer.innerHTML = '<p style="text-align: center;">No hay eventos.</p>';
+                    } else {
+                        events.forEach(event => {
+                            // Agregar a la lista visual
+                            const div = document.createElement('div');
+                            div.className = 'event-item';
+                            div.innerHTML = `
+                                <p><strong>${event.actividad}</strong></p>
+                                <p style="color: #666;">${new Date(event.fecha).toLocaleDateString()} | ${event.hora_inicio}</p>
+                            `;
+                            eventListContainer.appendChild(div);
+
+                            // Agregar al Select de asignación
+                            const option = document.createElement('option');
+                            option.value = event.id;
+                            option.textContent = `${event.actividad} (${event.hora_inicio})`;
+                            assignSelect.appendChild(option);
+                        });
+                    }
+                }
+            } catch (error) {
+                console.error(error);
+                eventListContainer.innerHTML = '<p style="color:red; text-align:center;">Error de conexión.</p>';
+            }
+        }
+
+        // --- 2. AGREGAR NUEVO EVENTO ---
+        addEventForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(addEventForm);
+            const data = Object.fromEntries(formData.entries());
+
+            try {
+                const res = await fetch('http://localhost:3000/api/eventos', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                
+                if(result.success) {
+                    alert('Evento creado');
+                    addEventForm.reset();
+                    loadEvents(); // Recargar lista y select
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (err) { alert('Error de conexión'); }
+        });
+
+        // --- 3. ASIGNAR ALUMNO ---
+        assignEventForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const matricula = document.getElementById('assignStudentId').value;
+            const eventoId = assignSelect.value;
+
+            try {
+                const res = await fetch('http://localhost:3000/api/inscripciones', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ idInstitucional: matricula, eventoId: eventoId })
+                });
+                const result = await res.json();
+
+                if(result.success) {
+                    alert(result.message);
+                    document.getElementById('assignStudentId').value = ''; // Limpiar campo
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (err) { alert('Error de conexión'); }
+        });
+
+        // Inicializar
+        loadEvents();
+    });
+    </script>
+</body>
+</html>

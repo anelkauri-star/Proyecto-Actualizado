@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Asistencias - Congreso</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos CSS Generales (reutilizados de las páginas anteriores) */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            background-color: #fce4ec; /* Rosa muy claro */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .navbar {
+            background-color: #fff;
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-left, .navbar-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: #ff4081; /* Rosa vibrante */
+            font-weight: 600;
+            margin-left: 30px;
+            font-size: 1.1em;
+            transition: color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            color: #d81b60;
+        }
+
+        /* Estilo para el enlace activo en la barra de navegación */
+        .navbar .active {
+            color: #ff4081;
+            font-weight: 700;
+        }
+
+        .navbar-left a:first-child {
+            margin-left: 0;
+        }
+
+        /* Contenido principal de la página Mis Asistencias */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            text-align: left; /* Alinea el texto a la izquierda dentro del contenedor principal */
+            justify-content: flex-start; /* Alinea el contenido al inicio (arriba) */
+        }
+
+        .content-container {
+            background-color: #fff;
+            padding: 40px 60px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 900px; /* Ancho máximo para el contenedor del contenido */
+            box-sizing: border-box;
+            margin-top: 20px; /* Un poco de margen superior */
+        }
+
+        h1.page-title {
+            color: #555;
+            font-size: 2.8em;
+            margin-bottom: 30px;
+            font-weight: 600;
+            text-align: center; /* Título centrado */
+        }
+
+        .info-section {
+            margin-bottom: 30px;
+        }
+
+        .info-section p {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            color: #444;
+        }
+
+        .info-section strong {
+            color: #333;
+        }
+
+        /* Estilos para la barra de progreso de créditos */
+        .progress-section {
+            margin-bottom: 40px;
+        }
+
+        .progress-title {
+            font-size: 1.6em;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar-container {
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            height: 40px;
+            overflow: hidden; /* Asegura que la barra de progreso no se salga */
+        }
+
+        .progress-bar {
+            background-color: #4CAF50; /* Verde brillante */
+            height: 100%;
+            width: 80%; /* Ejemplo: 80% de progreso. Ajusta este valor con JavaScript/dinámicamente */
+            display: flex;
+            align-items: center;
+            justify-content: flex-end; /* Alinea el texto a la derecha */
+            padding-right: 15px; /* Espacio para el texto */
+            box-sizing: border-box;
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.1em;
+            transition: width 0.5s ease; /* Transición suave si el progreso cambia */
+        }
+
+        /* Estilos para la sección de eventos asistidos */
+        .events-section {
+            margin-bottom: 40px;
+        }
+
+        .events-title {
+            font-size: 1.6em;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .event-item {
+            background-color: #f8f8f8; /* Un gris muy claro para cada evento */
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .event-item p {
+            font-size: 1.2em;
+            margin-bottom: 8px;
+            color: #444;
+        }
+
+        .event-item strong {
+            color: #333;
+        }
+
+        .event-item .status {
+            font-weight: 700;
+            color: #4CAF50; /* Verde para asistencia registrada */
+        }
+
+        /* Estilos para los botones */
+        .event-actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 15px; /* Espacio entre botones */
+            flex-wrap: wrap; /* Permite que los botones se envuelvan */
+        }
+
+        .event-actions .button {
+            background-color: #333;
+            color: #fff;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none; /* Para enlaces con estilo de botón */
+            display: inline-block; /* Para que padding y margin funcionen */
+            text-align: center;
+        }
+
+        .event-actions .button:hover {
+            background-color: #000;
+        }
+
+        .event-actions .button.justify {
+            background-color: #ff9800; /* Naranja para justificar */
+        }
+        .event-actions .button.justify:hover {
+            background-color: #fb8c00;
+        }
+
+        .event-actions .button.download {
+            background-color: #2196f3; /* Azul para descargar */
+        }
+        .event-actions .button.download:hover {
+            background-color: #1976d2;
+        }
+
+        /* Media Queries para responsividad */
+        @media (max-width: 900px) {
+            .navbar { flex-direction: column; padding: 15px 20px; }
+            .navbar-left, .navbar-right { flex-direction: column; align-items: flex-start; margin-top: 10px; }
+            .navbar a { margin-left: 0; margin-bottom: 10px; }
+            .navbar-right { margin-top: 20px; }
+            .content-container { padding: 30px; max-width: 95%; }
+            h1.page-title { font-size: 2.2em; margin-bottom: 25px; }
+            .info-section p { font-size: 1.1em; }
+            .progress-title, .events-title { font-size: 1.4em; }
+            .progress-bar-container { height: 35px; }
+            .progress-bar { font-size: 1em; }
+            .event-item { padding: 15px; }
+            .event-item p { font-size: 1.1em; }
+            .event-actions { gap: 10px; }
+            .event-actions .button { padding: 10px 20px; font-size: 0.9em; }
+        }
+
+        @media (max-width: 600px) {
+            .navbar { padding: 10px; }
+            .navbar a { font-size: 1em; margin-bottom: 8px; }
+            h1.page-title { font-size: 1.8em; margin-bottom: 20px; }
+            .content-container { padding: 20px; }
+            .info-section p { font-size: 1em; }
+            .progress-title, .events-title { font-size: 1.2em; }
+            .progress-bar-container { height: 30px; }
+            .progress-bar { font-size: 0.9em; padding-right: 10px; }
+            .event-item { padding: 12px; }
+            .event-item p { font-size: 1em; }
+            .event-actions { flex-direction: column; gap: 8px; } /* Apila los botones en móviles */
+            .event-actions .button { width: 100%; } /* Botones de ancho completo */
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar-left">
+            
+            <a href="Inicio de sesion.html">Inicio</a>
+            <a href="#">Carreras</a>
+            <a href="redes sociales.html" class="active">Redes Sociales</a>
+        </div>
+        <div class="navbar-right">
+            <a href="#">Eventos destacados</a>
+            <a href="Programa Completo.html">Programa</a>
+            <a href="mapa.html" class="active">Mapa</a>
+            <a href="Asistencias y creditos.html" class="active">Mis Asistencias</a>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="content-container">
+            <h1 class="page-title">Mis Asistencias</h1>
+
+            <div class="info-section">
+                <p><strong>Nombre:</strong> [Nombre del Alumno]</p>
+                <p><strong>ID:</strong> [ID del Alumno]</p>
+            </div>
+
+            <div class="progress-section">
+                <p class="progress-title">Progreso de Créditos</p>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: 80%;">
+                        Crédito Humanista X / 15 horas
+                    </div>
+                </div>
+            </div>
+
+            <div class="events-section">
+                <p class="events-title">Eventos Asistidos</p>
+
+                <div class="event-item">
+                    <p><strong>Evento:</strong> [Nombre del Evento 1]</p>
+                    <p><strong>Fecha:</strong> [Fecha del Evento 1]</p>
+                    <p><strong>Asistencia:</strong> <span class="status">Registrada</span></p>
+                    <div class="event-actions">
+                        <a href="Justificar faltas.html" class="button justify">Justificar Falta</a>
+                        <button class="button download" onclick="alert('Descargando constancia para Evento 1...');">Descargar Constancia/Certificado</button>
+                    </div>
+                </div>
+
+                <div class="event-item">
+                    <p><strong>Evento:</strong> [Nombre del Evento 2]</p>
+                    <p><strong>Fecha:</strong> [Fecha del Evento 2]</p>
+                    <p><strong>Asistencia:</strong> <span class="status">Pendiente de Justificar</span></p>
+                    <div class="event-actions">
+                        <a href="Justificar faltas.html" class="button justify">Justificar Falta</a>
+                        <button class="button download" disabled style="opacity: 0.5; cursor: not-allowed;">Descargar Constancia/Certificado</button>
+                    </div>
+                </div>
+
+                <div class="event-item">
+                    <p><strong>Evento:</strong> [Nombre del Evento 3]</p>
+                    <p><strong>Fecha:</strong> [Fecha del Evento 3]</p>
+                    <p><strong>Asistencia:</strong> <span class="status" style="color: #FF5722;">Falta</span></p>
+                    <div class="event-actions">
+                        <a href="Justificar faltas.html" class="button justify">Justificar Falta</a>
+                        <button class="button download" disabled style="opacity: 0.5; cursor: not-allowed;">Descargar Constancia/Certificado</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

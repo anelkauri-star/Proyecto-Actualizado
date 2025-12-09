@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar Reportes Administrativos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Fuentes */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            background-color: #fce4ec; /* Un rosa muy claro */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Barra de navegación superior */
+        .navbar {
+            background-color: #fff;
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-left, .navbar-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: #ff4081; /* Rosa vibrante */
+            font-weight: 600;
+            margin-left: 30px;
+            font-size: 1.1em;
+            transition: color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            color: #d81b60; /* Rosa más oscuro al pasar el ratón */
+        }
+
+        .navbar .active {
+            color: #ff4081;
+            font-weight: 700;
+        }
+
+        .navbar-left a:first-child {
+            margin-left: 0;
+        }
+
+        /* Contenido principal */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        h1.page-title {
+            color: #555;
+            font-size: 2.8em;
+            margin-bottom: 40px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* Contenedor del reporte */
+        .report-container {
+            background-color: #ffffff; /* Fondo blanco para el contenedor del reporte */
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1000px; /* Aumentado para más campos */
+            box-sizing: border-box;
+            text-align: left;
+            margin-bottom: 30px; /* Espacio para el botón personalizado */
+        }
+
+        /* Sección de filtros */
+        .filter-section {
+            background-color: #fce4ec; /* Un rosa claro para el fondo del filtro */
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-wrap: wrap; /* Permite que los elementos se envuelvan */
+            gap: 20px; /* Espacio entre elementos del filtro */
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-section label {
+            font-weight: 600;
+            color: #d81b60; /* Rosa más oscuro para etiquetas de filtro */
+            font-size: 1.1em;
+            margin-right: 5px;
+        }
+
+        .filter-section input[type="date"],
+        .filter-section select {
+            padding: 10px 15px;
+            border: 1px solid #ffab91; /* Borde rosa claro */
+            border-radius: 8px;
+            font-size: 1em;
+            color: #333;
+            background-color: #fff;
+            flex-grow: 1; /* Permite que se expandan */
+            max-width: 200px;
+        }
+        
+        .filter-section button {
+            background-color: #ff4081; /* Botón de generar en rosa vibrante */
+            color: #fff;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-section button:hover {
+            background-color: #d81b60; /* Rosa más oscuro al pasar el ratón */
+        }
+
+
+        /* Estilos para la tabla del reporte */
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .report-table th,
+        .report-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+            font-size: 0.9em; /* Ajuste para más columnas */
+        }
+
+        .report-table th {
+            background-color: #ff4081; /* Encabezado de tabla en rosa */
+            color: #fff;
+            font-weight: 700;
+        }
+
+        .report-table tbody tr:nth-child(even) {
+            background-color: #fce4ec; /* Filas pares con un tono rosa claro */
+        }
+
+        .report-table tbody tr:hover {
+            background-color: #ffebee; /* Tono más claro al pasar el ratón */
+        }
+
+        /* Botones de acción al final */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px; /* Espacio entre botones */
+            margin-top: 30px;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .action-buttons .button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            text-decoration: none; /* Para enlaces con estilo de botón */
+            color: #fff;
+            text-align: center;
+        }
+
+        .action-buttons .back-button {
+            background-color: #333; /* Botón oscuro */
+        }
+
+        .action-buttons .back-button:hover {
+            background-color: #000;
+        }
+
+        .action-buttons .custom-button {
+            background-color: #d81b60; /* Rosa más oscuro */
+        }
+
+        .action-buttons .custom-button:hover {
+            background-color: #a00040; /* Aún más oscuro */
+        }
+
+
+        /* Media Queries para responsividad */
+        @media (max-width: 1024px) {
+            .report-container {
+                padding: 25px 30px;
+                max-width: 95%;
+            }
+            .report-table th,
+            .report-table td {
+                padding: 10px;
+                font-size: 0.85em;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .navbar {
+                flex-direction: column;
+                padding: 15px 20px;
+            }
+            .navbar-left, .navbar-right {
+                flex-direction: column;
+                align-items: flex-start;
+                margin-top: 10px;
+            }
+            .navbar a {
+                margin-left: 0;
+                margin-bottom: 10px;
+            }
+            .navbar-right {
+                margin-top: 20px;
+            }
+            .filter-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-section input[type="date"],
+            .filter-section select,
+            .filter-section button {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .navbar {
+                padding: 10px;
+            }
+            .navbar a {
+                font-size: 1em;
+                margin-bottom: 8px;
+            }
+            h1.page-title {
+                font-size: 2.2em;
+                margin-bottom: 30px;
+            }
+            .report-container {
+                padding: 15px;
+            }
+            .report-table {
+                font-size: 0.7em;
+                display: block; /* Permite scroll horizontal */
+                overflow-x: auto; /* Habilita el scroll horizontal */
+                white-space: nowrap; /* Evita que el contenido de las celdas se envuelva */
+            }
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            .action-buttons .button {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar-left">
+            <a href="menu_principal_admin.html" class="active">Inicio</a>
+            <a href="#">Carreras</a>
+            <a href="redes sociales.html">Redes Sociales</a>
+        </div>
+        <div class="navbar-right">
+            <a href="#">Eventos destacados</a>
+            <a href="Mapa.html">Mapa</a>
+            <a href="logout.php">Cerrar Sesión</a>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <h1 class="page-title">Generación de Reportes</h1>
+
+        <div class="report-container">
+            <h2>Reporte Detallado de Asistencia y Participantes</h2>
+
+            <div class="filter-section">
+                <label for="report-date">Filtrar por Día:</label>
+                <input type="date" id="report-date" name="report_date" value="2025-06-01">
+                
+                <label for="event-filter">Filtrar por Evento:</label>
+                <select id="event-filter" name="event_filter">
+                    <option value="">Todos los eventos</option>
+                    <option value="Introduccion al SEO">Introducción al SEO</option>
+                    <option value="Gestion de Marcas">Gestión de Marcas</option>
+                    <option value="Tendencias en Redes Sociales">Tendencias en Redes Sociales</option>
+                    <option value="Keynote">Keynote: Futuro de la Mercadotecnia</option>
+                </select>
+
+                <button type="button" onclick="alert('Funcionalidad de filtro se implementaría con PHP/JavaScript')">Generar Reporte</button>
+            </div>
+
+            <table class="report-table">
+                <thead>
+                    <tr>
+                        <th>Fecha Evento</th>
+                        <th>ID/Correo Credencial</th>
+                        <th>Tipo Credencial</th>
+                        <th>Nombre Completo</th>
+                        <th>Carrera/Tipo</th>
+                        <th>Semestre</th>
+                        <th>Evento/Conferencia</th>
+                        <th>Hora Entrada</th>
+                        <th>Hora Salida</th>
+                        <th>Estado Asistencia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2025-06-01</td>
+                        <td>A001</td>
+                        <td>Alumno</td>
+                        <td>Ana García</td>
+                        <td>Marketing Digital</td>
+                        <td>5to</td>
+                        <td>Introducción al SEO</td>
+                        <td>09:00</td>
+                        <td>10:30</td>
+                        <td>Presente</td>
+                    </tr>
+                    <tr>
+                        <td>2025-06-01</td>
+                        <td>A002</td>
+                        <td>Alumno</td>
+                        <td>Carlos Díaz</td>
+                        <td>Negocios Internacionales</td>
+                        <td>7mo</td>
+                        <td>Gestión de Marcas</td>
+                        <td>10:45</td>
+                        <td>12:15</td>
+                        <td>Presente</td>
+                    </tr>
+                    <tr>
+                        <td>2025-06-02</td>
+                        <td>A003</td>
+                        <td>Alumno</td>
+                        <td>Laura Pérez</td>
+                        <td>Marketing Digital</td>
+                        <td>5to</td>
+                        <td>Tendencias en Redes Sociales</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>Ausente</td>
+                    </tr>
+                     <tr>
+                        <td>2025-06-02</td>
+                        <td>maria.l@e.com</td>
+                        <td>Invitado</td>
+                        <td>Maria López</td>
+                        <td>Marketing Freelance</td>
+                        <td>N/A</td>
+                        <td>Marketing de Contenidos</td>
+                        <td>14:00</td>
+                        <td>15:30</td>
+                        <td>Presente</td>
+                    </tr>
+                    <tr>
+                        <td>2025-06-03</td>
+                        <td>P001</td>
+                        <td>Profesor</td>
+                        <td>Dr. Juan Gómez</td>
+                        <td>Comunicación</td>
+                        <td>N/A</td>
+                        <td>Panel de Expertos</td>
+                        <td>08:30</td>
+                        <td>10:00</td>
+                        <td>Presente</td>
+                    </tr>
+                    <tr>
+                        <td>2025-06-03</td>
+                        <td>admin@c.com</td>
+                        <td>Administrador</td>
+                        <td>Sofía Sánchez</td>
+                        <td>Gestión Eventos</td>
+                        <td>N/A</td>
+                        <td>Reunión Estratégica</td>
+                        <td>09:00</td>
+                        <td>17:00</td>
+                        <td>Presente</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="action-buttons">
+            <a href="menu_principal_admin.html" class="button back-button">Volver al Menú</a>
+            <a href="#" class="button custom-button" onclick="alert('Aquí se abriría una interfaz para filtros más avanzados o reportes específicos.')">Reporte Personalizado</a>
+        </div>
+    </main>
+</body>
+</html>

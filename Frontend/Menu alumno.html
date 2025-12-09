@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido - Congreso UAA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    
+    <header class="header-white">
+        <div class="logo-left">
+            <a href="Menu alumno.html" style="font-weight: 800;">Inicio</a> 
+            <a href="redes sociales.html">Redes Sociales</a>
+            <a href="#">Carreras</a>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="Constancias.html">Constancias</a></li>
+                <li><a href="Justificantes.html">Justificantes</a></li> <li><a href="Codigo QR.html">Mi QR</a></li>
+                <li><a href="Programa Completo.html">Programa</a></li>
+                <li><a href="mapa.html">Mapa</a></li>
+                <li><a href="#" id="btnLogout" style="color: #ff4081; font-weight: 700;">Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content" style="align-items: flex-start;"> 
+        <div class="welcome-container">
+            <div class="welcome-heading">
+                Bienvenido <span id="nombreUsuario" class="welcome-name">Usuario</span>
+            </div>
+            
+            <p class="welcome-subtext">
+                Utiliza el menú superior para descargar tu constancia, enviar justificantes o ver el programa.
+            </p>
+        </div>
+    </main>
+
+    <script src="js/bienvenida.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnLogout = document.getElementById('btnLogout');
+            if(btnLogout){
+                btnLogout.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    localStorage.removeItem('usuarioLogueado');
+                    window.location.href = 'index.html';
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>

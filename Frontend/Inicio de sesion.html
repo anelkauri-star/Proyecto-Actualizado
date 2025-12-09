@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - Congreso</title>
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <header class="header-white"> <div class="logo-left">
+        <a href="index.html">Inicio</a>
+        <a href="redes sociales.html">Redes Sociales</a>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="Eventos.html">Eventos Destacados</a></li>
+            <li><a href="Mapa.html">Mapa</a></li>
+            <li><a href="Inicio de sesion.html" style="font-weight: 900; text-decoration: underline;">Iniciar Sesión</a></li>
+        </ul>
+    </nav>
+</header>
+
+    <main class="main-content">
+        <h1 class="page-title">Ingresar al Congreso</h1>
+
+        <div class="login-box">
+            <form id="loginForm" onsubmit="iniciarSesion(event)">
+                
+                <label for="user-type">¿Quién va a Ingresar?</label>
+                <select id="user-type" name="user_type">
+                    <option value="alumno">Alumno</option>
+                    <option value="profesor">Profesor</option>
+                    <option value="invitado">Invitado</option>
+                    <option value="administrador">Administrador</option>
+                </select>
+
+                <label for="id-institucional-input" id="credential-label">Ingrese su ID Institucional</label>
+                <input type="text" id="id-institucional-input" placeholder="ej. 200198">
+
+                <label for="password-input">Contraseña</label>
+                <input type="password" id="password-input" placeholder="••••••••">
+                
+                <div id="loginMessage" style="color: #fff; font-weight: bold; text-align: center; margin-bottom: 10px;"></div>
+
+                <button type="submit">Ingresar</button>
+                <a href="Recuperacion de cuenta.html" class="forgot-password-link">¿Olvidaste tu contraseña?</a>
+            </form>
+        </div>
+    </main>
+
+    <script src="js/login.js"></script>
+</body>
+</html>

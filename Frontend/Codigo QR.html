@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Congreso UAA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos CSS Generales */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            background-color: #fce4ec; /* Rosa muy claro */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Contenido principal */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            text-align: center;
+            justify-content: flex-start; /* Alinea el contenido al inicio (arriba) */
+        }
+
+        .dashboard-container {
+            background-color: #fff;
+            padding: 40px 60px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 800px; /* Ancho máximo para el contenedor del contenido */
+            box-sizing: border-box;
+            margin-top: 20px; /* Un poco de margen superior */
+        }
+
+        .logo-placeholder {
+            /* Puedes reemplazar esto con una imagen de logo real */
+            font-size: 3em;
+            font-weight: 700;
+            color: #ff4081; /* Rosa vibrante */
+            margin-bottom: 30px;
+        }
+
+        .welcome-message {
+            font-size: 1.8em;
+            color: #555;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .next-event-section {
+            margin-bottom: 50px;
+        }
+
+        .next-event-title {
+            font-size: 1.6em;
+            color: #555;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .event-info {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .qr-button {
+            background-color: #333; /* Botón oscuro */
+            color: #fff;
+            padding: 20px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.6em;
+            font-weight: 700;
+            cursor: pointer;
+            width: 80%; /* Ancho del botón */
+            max-width: 400px;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .qr-button:hover {
+            background-color: #000;
+        }
+
+        /* Barra de navegación inferior */
+        .navbar-bottom {
+            background-color: #ff4081; /* Rosa vibrante */
+            padding: 20px 20px;
+            display: flex;
+            justify-content: center; /* Centrar los enlaces */
+            flex-wrap: wrap; /* Permite que los enlaces se envuelvan en varias líneas */
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: auto; /* Empuja la barra al fondo */
+        }
+
+        .navbar-bottom a {
+            text-decoration: none;
+            color: #fff; /* Texto blanco */
+            font-weight: 600;
+            margin: 0 15px; /* Espacio entre enlaces */
+            font-size: 1.1em;
+            transition: color 0.3s ease;
+            padding: 5px 0; /* Pequeño padding vertical para la zona de clic */
+        }
+
+        .navbar-bottom a:hover {
+            color: #fce4ec; /* Rosa muy claro al pasar el ratón */
+        }
+
+        .logout-link {
+            display: block; /* Para que ocupe su propia línea */
+            margin-top: 40px;
+            color: #ff4081;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.2em;
+            transition: color 0.3s ease;
+        }
+
+        .logout-link:hover {
+            color: #d81b60;
+        }
+
+        /* Media Queries para responsividad */
+        @media (max-width: 900px) {
+            .dashboard-container { padding: 30px; max-width: 95%; }
+            .logo-placeholder { font-size: 2.5em; margin-bottom: 25px; }
+            .welcome-message { font-size: 1.5em; margin-bottom: 25px; }
+            .next-event-title { font-size: 1.4em; }
+            .event-info { font-size: 1.1em; }
+            .qr-button { padding: 15px 30px; font-size: 1.4em; width: 90%; }
+            .navbar-bottom { padding: 15px 10px; }
+            .navbar-bottom a { margin: 0 10px; font-size: 1em; }
+            .logout-link { font-size: 1.1em; margin-top: 30px; }
+        }
+
+        @media (max-width: 600px) {
+            .dashboard-container { padding: 20px; }
+            .logo-placeholder { font-size: 2em; margin-bottom: 20px; }
+            .welcome-message { font-size: 1.2em; margin-bottom: 20px; }
+            .next-event-title { font-size: 1.2em; }
+            .event-info { font-size: 1em; }
+            .qr-button { padding: 12px 20px; font-size: 1.2em; width: 100%; }
+            .navbar-bottom { flex-direction: column; /* Apila los enlaces en móviles */ }
+            .navbar-bottom a { margin: 8px 0; /* Más espacio vertical */ font-size: 0.9em; }
+            .logout-link { font-size: 1em; margin-top: 25px; }
+        }
+    </style>
+</head>
+<body>
+    <main class="main-content">
+        <div class="dashboard-container">
+            <div class="logo-placeholder">
+                [Logo UAA]
+            </div>
+
+            <p class="welcome-message">
+                ¡Hola, [Nombre del Alumno]!
+            </p>
+
+            <div class="next-event-section">
+                <p class="next-event-title">Próximo Evento</p>
+                <p class="event-info">
+                    [Información del próximo evento]
+                    </p>
+                <button class="qr-button" onclick="alert('Generando QR para asistencia...');">
+                    Generar QR para Asistencia
+                </button>
+            </div>
+
+            <a href="#" class="logout-link" onclick="alert('Cerrando sesión...');">Cerrar sesión</a>
+        </div>
+    </main>
+
+    <nav class="navbar-bottom">
+        <a href="programa.html">Programa Completo</a>
+        <a href="#">Mis Inscripciones</a> <a href="mis_asistencias.html">Mis Asistencias</a>
+        <a href="mapa.html">Mapa</a>
+        <a href="redes_sociales.html">Redes Sociales</a>
+    </nav>
+
+</body>
+</html>

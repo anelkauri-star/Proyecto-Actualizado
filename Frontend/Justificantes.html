@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Enviar Justificante</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <header class="header-white">
+        <div class="logo-left"><a href="Menu alumno.html">Inicio</a></div>
+        <nav><ul><li><a href="Menu alumno.html">Volver al Menú</a></li></ul></nav>
+    </header>
+
+    <main class="main-content">
+        <div class="content-container" style="max-width: 600px;">
+            <h2 style="color: #ff4081; text-align: center; margin-bottom: 30px;">Subir Justificante</h2>
+            
+            <form id="formJustificante">
+                <div class="form-group">
+                    <label>Motivo de la falta:</label>
+                    <input type="text" id="motivo" required placeholder="Ej: Cita médica, Enfermedad..." 
+                           style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px;">
+                </div>
+
+                <div class="form-group">
+                    <label>Seleccionar Archivo (PDF o Imagen):</label>
+                    <input type="file" id="archivo" required accept=".pdf, .jpg, .png" 
+                           style="width: 100%; padding: 10px; background: #f9f9f9; border-radius: 8px;">
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="submit-button" style="width: 100%;">Enviar Documento</button>
+                </div>
+            </form>
+            <div id="mensaje" style="text-align: center; margin-top: 15px; font-weight: bold;"></div>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('formJustificante').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            //  Se obtienen datos del usuario logueado
+            const usuarioLogueado = JSON.parse(localStorage.getItem('usuarioLogueado'));
+            
+            console.log("Datos del usuario en sesión:", usuarioLogueado);
+
+            if (!usuarioLogueado) {
+                alert("Tu sesión ha expirado. Por favor inicia sesión de nuevo.");
+                window.location.href = 'Inicio de sesion.html';
+                return;
+            }
+            const idAlumno = usuarioLogueado.id_institucional || 
+                             usuarioLogueado.idInstitucional || 
+                             usuarioLogueado.id || 
+                             usuarioLogueado.id_usuario;
+
+            if (!idAlumno) {
+                alert("Error crítico: El sistema no encuentra tu ID. \n\nPresiona F12, ve a 'Console' y mándame una foto de lo que aparece.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('idAlumno', idAlumno); 
+            formData.append('motivo', document.getElementById('motivo').value);
+            
+            const archivoInput = document.getElementById('archivo');
+            if(archivoInput.files.length > 0){
+                formData.append('archivo', archivoInput.files[0]);
+            } else {
+                alert("Por favor selecciona un archivo.");
+                return;
+            }
+
+            const mensaje = document.getElementById('mensaje');
+            mensaje.textContent = "Subiendo...";
+            mensaje.style.color = "#333";
+
+            try {
+                const res = await fetch('http://localhost:3000/api/justificantes/subir', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await res.json();
+
+                if (result.success) {
+                    mensaje.style.color = "green";
+                    mensaje.textContent = "✔️ Justificante enviado con éxito.";
+                    document.getElementById('formJustificante').reset();
+                } else {
+                    mensaje.style.color = "red";
+                    mensaje.textContent = "❌ " + result.message;
+                }
+            } catch (error) {
+                console.error(error);
+                mensaje.style.color = "red";
+                mensaje.textContent = " Error de conexión con el servidor.";
+            }
+        });
+    </script>
+</body>
+</html>

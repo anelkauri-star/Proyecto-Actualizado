@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Generar Asistencia QR</title>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <style>
+        /* Estilos CSS */
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            background-color: #fce4ec; /* Rosa muy claro */
+            margin: 0;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #ff69b4; /* Rosa vibrante */
+            color: white;
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            box-sizing: border-box;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .logo-left a {
+            color: white;
+            text-decoration: none;
+            margin-right: 20px;
+            font-weight: 600;
+        }
+
+        .logo-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-left img {
+            height: 40px;
+            margin-right: 15px;
+        }
+
+        .hero {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            text-align: center;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .hero h1 {
+            font-size: 2em;
+            color: #d81b60; /* Rosa oscuro */
+            margin-bottom: 20px;
+        }
+        
+        #user-info p {
+            margin: 5px 0;
+            font-size: 1.1em;
+            color: #333;
+        }
+
+        #qrcode-container {
+            margin-top: 30px;
+            text-align: center;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        #qrcode {
+            display: inline-block;
+            padding: 5px;
+            margin: 10px 0;
+            border: 2px solid #ff69b4;
+        }
+
+        #qr-message {
+            font-style: italic;
+            color: #777;
+            margin-top: 5px;
+        }
+
+        #qr-timer {
+            font-weight: bold;
+            color: #d81b60;
+            margin-top: 8px;
+            font-size: 1.2em;
+        }
+
+        footer {
+            width: 100%;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 10px;
+            margin-top: auto; /* Empuja el footer hacia abajo */
+        }
+
+        footer img {
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-left">
+            <img src="logo.png" alt="Logo" />
+            <a href="bienvenida.html">Inicio</a>
+            <a href="#">Carreras</a>
+            <a href="redes sociales.html">Redes Sociales</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#">Eventos destacados</a></li>
+                <li><a href="Programa Completo.html">Programa</a></li>
+                <li><a href="mapa.html">Mapa</a></li>
+                <li><a href="Asistencias y creditos.html">Mis Asistencias</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Registro de Asistencia QR</h1>
+        <div id="user-info">
+            <p>Usuario: <span id="username">Cargando...</span></p>
+            <p>ID: <span id="userid">Cargando...</span></p>
+            <p>Carrera: <span id="usercareer">Cargando...</span></p>
+            <p>Semestre: <span id="usersemester">Cargando...</span></p>
+        </div>
+        
+        <div id="qrcode-container">
+            <div id="qrcode"></div>
+            <div id="qr-message">Este código QR se actualizará automáticamente cada 5 segundos.</div>
+            <div id="qr-timer"></div>
+        </div>
+    </section>
+
+    <footer>
+        <img src="mkt.png" alt="MKT" />
+    </footer>
+
+    <script>
+        let qrCodeInstance = null;
+        let timer;
+        let countdownInterval;
+        // 🛑 Duración del QR: 5 segundos (5000 milisegundos)
+        const qrDuration = 5 * 1000; 
+        const qrcodeContainer = document.getElementById('qrcode-container');
+
+        // Función para cargar los datos del usuario desde localStorage
+        function loadLoggedInUser() {
+            const userDataJSON = localStorage.getItem('usuarioLogueado');
+            if (!userDataJSON) {
+                document.getElementById('username').textContent = 'Error: No se encontró usuario. Inicie sesión.';
+                return null;
+            }
+            
+            // Se asume que los datos tienen: nombre, id, carrera, semestre
+            const userData = JSON.parse(userDataJSON); 
+            
+            document.getElementById('username').textContent = userData.nombre || 'N/A';
+            document.getElementById('userid').textContent = userData.id || 'N/A';
+            document.getElementById('usercareer').textContent = userData.carrera || 'N/A';
+            document.getElementById('usersemester').textContent = userData.semestre || 'N/A';
+            
+            return userData;
+        }
+
+        function generarQR() {
+            const userData = loadLoggedInUser();
+            
+            if (!userData) {
+                document.getElementById('qr-message').textContent = 'Error. Por favor, inicie sesión nuevamente.';
+                return;
+            }
+
+            // Datos a codificar en el QR
+            const qrData = {
+                nombre: userData.nombre,
+                id: userData.idInstitucional,
+                carrera: userData.carrera,
+                semestre: userData.semestre,
+                timestamp: Date.now() 
+            };
+
+            // Convertir el objeto JSON a una cadena codificada base64
+            const uniqueCode = btoa(JSON.stringify(qrData));
+
+            const qrcodeDiv = document.getElementById('qrcode');
+            qrcodeDiv.innerHTML = '';
+            qrCodeInstance = new QRCode(qrcodeDiv, {
+                text: uniqueCode,
+                width: 128,
+                height: 128
+            });
+
+            iniciarTemporizador(qrDuration);
+
+            // Reiniciar la regeneración automática
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                generarQR();
+            }, qrDuration);
+        }
+
+        function iniciarTemporizador(duracion) {
+            const display = document.getElementById('qr-timer');
+            let tiempoRestante = duracion / 1000; // Duración en segundos (5)
+
+            clearInterval(countdownInterval);
+            countdownInterval = setInterval(() => {
+                const minutos = Math.floor(tiempoRestante / 60);
+                const segundos = tiempoRestante % 60;
+                // Muestra el tiempo restante
+                display.textContent = `Tiempo restante para actualizar: ${minutos}:${segundos.toString().padStart(2, '0')}`;
+                tiempoRestante--;
+
+                if (tiempoRestante < 0) {
+                    clearInterval(countdownInterval);
+                    display.textContent = 'Código QR Expirado. Regenerando...';
+                }
+            }, 1000);
+        }
+
+        // Inicio de la generación del QR al cargar la página
+        document.addEventListener('DOMContentLoaded', () => {
+            generarQR(); 
+            qrcodeContainer.style.display = 'block';
+        });
+    </script>
+</body>
+</html>

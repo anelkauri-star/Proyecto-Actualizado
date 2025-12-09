@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    
+    <header class="header-white">
+        <div class="logo-left">
+            <a href="menu_admin.html">Inicio</a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#" id="btnLogout">Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <h1 class="page-title">Gestión de Usuarios por Categoría</h1>
+
+        <div class="form-container">
+            <h2>Añadir Nuevo Usuario</h2>
+            <form action="#">
+                <input type="hidden" name="user_id" value=""> 
+                <input type="hidden" name="action_type" value="add"> 
+                
+                <div class="form-group">
+                    <label for="tipo_usuario">Tipo de Usuario:</label>
+                    <select id="tipo_usuario" name="tipo_usuario" required>
+                        <option value="">Seleccione tipo</option>
+                        <option value="personal">Personal Administrativo</option>
+                        <option value="alumno">Alumno</option>
+                        <option value="invitado">Invitado</option>
+                        <option value="profesor">Profesor</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_usuario">ID/Credencial:</label>
+                    <input type="text" id="id_usuario" name="id_usuario" required placeholder="Ej: A001, P005, INV123">
+                </div>
+
+                <div class="form-group">
+                    <label for="nombre_completo">Nombre Completo:</label>
+                    <input type="text" id="nombre_completo" name="nombre_completo" required placeholder="Ej: Juan Pérez García">
+                </div>
+
+                <div class="form-group">
+                    <label for="correo">Correo Electrónico:</label>
+                    <input type="email" id="correo" name="correo" required placeholder="Ej: juan.perez@example.com">
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="submit-button">Añadir Usuario</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="table-category-container">
+            <h2>Personal Administrativo</h2>
+            <div style="overflow-x: auto;">
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre Completo</th>
+                            <th>Correo</th>
+                            <th>Rol</th> 
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-personal"></tbody> 
+                </table>
+            </div>
+        </div>
+
+        <div class="table-category-container">
+            <h2>Alumnos</h2>
+            <div style="overflow-x: auto;">
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>ID Credencial</th>
+                            <th>Nombre Completo</th>
+                            <th>Correo</th>
+                            <th>Carrera</th>
+                            <th>Semestre</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-alumno"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="table-category-container">
+            <h2>Invitados</h2>
+            <div style="overflow-x: auto;">
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre Completo</th>
+                            <th>Correo</th>
+                            <th>Empresa/Institución</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-invitado"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="table-category-container">
+            <h2>Profesores</h2>
+            <div style="overflow-x: auto;">
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre Completo</th>
+                            <th>Correo</th>
+                            <th>Departamento</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-profesor"></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <a href="menu_admin.html" style="display:block; text-align:center; margin-top:20px; color:#ff4081; font-weight:bold; text-decoration: none;">Volver al Menú</a>
+
+    </main>
+    
+    <script src="js/abcusuarios.js"></script> 
+    
+    <script>
+        const btnLogout = document.getElementById('btnLogout');
+        if(btnLogout) {
+            btnLogout.addEventListener('click', (e) => {
+                e.preventDefault();
+                localStorage.removeItem('usuarioLogueado');
+                window.location.href = 'index.html';
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificación y Recuperación - Congreso</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos CSS (pueden ser los mismos que en tu archivo style.css si lo tienes) */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            background-color: #fce4ec; /* Rosa muy claro */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .navbar {
+            background-color: #fff;
+            padding: 15px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-left, .navbar-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: #ff4081; /* Rosa vibrante */
+            font-weight: 600;
+            margin-left: 30px;
+            font-size: 1.1em;
+            transition: color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            color: #d81b60;
+        }
+
+        .navbar .active {
+            color: #ff4081;
+            font-weight: 700;
+        }
+
+        .navbar-left a:first-child {
+            margin-left: 0;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            gap: 30px; /* Espacio entre las dos cajas */
+        }
+
+        .action-box {
+            background-color: #ff4081; /* Rosa vibrante para las cajas */
+            padding: 40px 50px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 600px; /* Ancho máximo para las cajas */
+            box-sizing: border-box;
+            text-align: left; /* Alineación de texto dentro de la caja */
+            position: relative; /* Necesario para posicionar el mensaje absoluto */
+        }
+
+        .action-box h2 {
+            color: #fff;
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            text-align: center; /* Centrar el título de la sección */
+            font-weight: 600;
+        }
+
+        .action-box label {
+            display: block;
+            color: #fff;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .action-box input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2em;
+            background-color: #fff;
+            color: #333;
+            box-sizing: border-box;
+        }
+
+        .action-box input::placeholder {
+            color: #aaa;
+        }
+
+        .action-box button {
+            background-color: #333; /* Botón oscuro */
+            color: #fff;
+            padding: 18px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.4em;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+            margin-top: 10px; /* Ajuste el margen superior del botón */
+        }
+
+        .action-box button:hover {
+            background-color: #000;
+        }
+
+        /* Estilos para el mensaje de éxito */
+        .message-container {
+            position: absolute; /* Posicionamiento sobre la caja */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 64, 129, 0.95); /* Rosa con opacidad */
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 1.6em;
+            font-weight: 700;
+            text-align: center;
+            opacity: 0; /* Inicialmente oculto */
+            visibility: hidden; /* Inicialmente oculto */
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            z-index: 10; /* Asegura que esté por encima de otros elementos */
+            padding: 20px; /* Padding para el texto del mensaje */
+            box-sizing: border-box;
+        }
+
+        .message-container.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .message-container p {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Media Queries para responsividad */
+        @media (max-width: 900px) {
+            .navbar { flex-direction: column; padding: 15px 20px; }
+            .navbar-left, .navbar-right { flex-direction: column; align-items: flex-start; margin-top: 10px; }
+            .navbar a { margin-left: 0; margin-bottom: 10px; }
+            .navbar-right { margin-top: 20px; }
+        }
+
+        @media (max-width: 600px) {
+            .navbar { padding: 10px; }
+            .navbar a { font-size: 1em; margin-bottom: 8px; }
+            .action-box {
+                padding: 30px;
+                max-width: 95%;
+            }
+            .action-box h2 {
+                font-size: 1.6em;
+                margin-bottom: 20px;
+            }
+            .action-box label {
+                font-size: 1.1em;
+            }
+            .action-box input {
+                padding: 12px;
+                font-size: 1.1em;
+                margin-bottom: 20px;
+            }
+            .action-box button {
+                padding: 15px 20px;
+                font-size: 1.2em;
+            }
+            .main-content {
+                gap: 20px; /* Menos espacio entre cajas en pantallas pequeñas */
+            }
+            .message-container {
+                font-size: 1.4em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="navbar-left">
+            <a href="Inisio de sesion.html">Inicio</a>
+            <a href="#">Carreras</a>
+            <a href="redes sociales.html" class="active">Redes Sociales</a>
+        </div>
+        <div class="navbar-right">
+            <a href="#">Eventos destacados</a>
+            <a href="Mapa.html">Mapa</a>
+            <a href="Inicio de sesion.html">Iniciar Sesión</a>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="action-box">
+            <h2>¿Aún no recibes tu correo de verificación?</h2>
+            <label for="verification-id">ID/Correo</label>
+            <input type="text" id="verification-id" name="verification_id" placeholder="Ingresa tu ID/Correo">
+            <button type="button" id="btn-reenviar-correo">Reenviar Correo</button>
+
+            <div class="message-container" id="message-reenviar">
+                <p>¡Correo de verificación enviado!</p>
+            </div>
+        </div>
+
+        <div class="action-box" id="recuperar-contrasena">
+            <h2>¿Olvidaste tu contraseña?</h2>
+            <label for="recovery-id">ID/Correo</label>
+            <input type="text" id="recovery-id" name="recovery_id" placeholder="Ingresa tu ID/Correo">
+            <button type="button" id="btn-recuperar-contrasena">Recuperar Contraseña</button>
+
+            <div class="message-container" id="message-recuperar">
+                <p>¡Correo de recuperación enviado!</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const btnReenviar = document.getElementById('btn-reenviar-correo');
+            const messageReenviar = document.getElementById('message-reenviar');
+            const inputReenviar = document.getElementById('verification-id');
+
+            const btnRecuperar = document.getElementById('btn-recuperar-contrasena');
+            const messageRecuperar = document.getElementById('message-recuperar');
+            const inputRecuperar = document.getElementById('recovery-id');
+
+            function showMessage(messageElement) {
+                messageElement.classList.add('show');
+                setTimeout(() => {
+                    messageElement.classList.remove('show');
+                }, 3000); // El mensaje desaparece después de 3 segundos
+            }
+
+            // Evento para el botón de reenviar correo
+            btnReenviar.addEventListener('click', function() {
+                // Validación básica: que el campo ID no esté vacío
+                if (inputReenviar.value.trim() !== '') {
+                    showMessage(messageReenviar);
+                    // Aquí podrías añadir lógica para enviar el ID a un servidor
+                    // console.log("Reenviar correo para ID:", inputReenviar.value);
+                } else {
+                    alert("Por favor, ingresa tu ID para reenviar el correo.");
+                }
+            });
+
+            // Evento para el botón de recuperar contraseña
+            btnRecuperar.addEventListener('click', function() {
+                // Validación básica: que el campo ID no esté vacío
+                if (inputRecuperar.value.trim() !== '') {
+                    showMessage(messageRecuperar);
+                    // Aquí podrías añadir lógica para enviar el ID a un servidor
+                    // console.log("Recuperar contraseña para ID:", inputRecuperar.value);
+                } else {
+                    alert("Por favor, ingresa tu ID para recuperar la contraseña.");
+                }
+            });
+        });
+    </script>
+</body>
+</html>

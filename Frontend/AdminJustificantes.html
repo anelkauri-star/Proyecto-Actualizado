@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Revisión de Justificantes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+    <header class="header-white">
+        <div class="logo-left"><a href="menu_admin.html">Panel Admin</a></div>
+        <nav><ul><li><a href="menu_admin.html">Volver</a></li></ul></nav>
+    </header>
+
+    <main class="main-content">
+        <div class="table-category-container">
+            <h2>Justificantes Recibidos</h2>
+            <div style="overflow-x: auto;">
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Alumno</th>
+                            <th>ID</th>
+                            <th>Motivo</th>
+                            <th>Documento</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaJustificantes">
+                        <tr><td colspan="5" style="text-align:center;">Cargando...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+   <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const tbody = document.getElementById('tablaJustificantes');
+            
+            try {
+                const res = await fetch('http://localhost:3000/api/justificantes/listar');
+                const result = await res.json();
+
+                console.log("Datos recibidos del servidor:", result);
+
+                if (result.success) {
+                    tbody.innerHTML = '';
+                    
+                    if(result.data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No hay justificantes.</td></tr>';
+                        return;
+                    }
+
+                    result.data.forEach(item => {
+                        console.log("Fila individual:", item);
+
+                        
+                        const fechaRaw = item.fecha_subida || item.FECHA_SUBIDA || item.Fecha_Subida;
+                        const nombre = item.nombre || item.NOMBRE || "Sin Nombre";
+                        const apellido = item.apellido_paterno || item.APELLIDO_PATERNO || "";
+                        const idAlumno = item.id_alumno || item.ID_ALUMNO || item.idInstitucional;
+                        const motivo = item.motivo || item.MOTIVO || "Sin motivo";
+                        const ruta = item.archivo_ruta || item.ARCHIVO_RUTA || "";
+
+                        let fecha = "Fecha inválida";
+                        if(fechaRaw) {
+                            const dateObj = new Date(fechaRaw);
+                            if(!isNaN(dateObj)) fecha = dateObj.toLocaleDateString();
+                        }
+
+                        const urlArchivo = `http://localhost:3000${ruta}`;
+                        
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${fecha}</td>
+                            <td>${nombre} ${apellido}</td>
+                            <td>${idAlumno}</td>
+                            <td>${motivo}</td>
+                            <td class="actions-column">
+                                <a href="${urlArchivo}" target="_blank" class="edit-button" style="background-color: #ff4081;">
+                                    Ver Archivo
+                                </a>
+                            </td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            } catch (error) {
+                console.error("Error grave:", error);
+                tbody.innerHTML = '<tr><td colspan="5">Error de conexión (Revisa la consola F12).</td></tr>';
+            }
+        });
+    </script>
+</body>
+</html>
